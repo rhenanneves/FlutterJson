@@ -7,6 +7,8 @@ class Produto{
 
   //construtor
   Produto({required this.nome, required  this.preco,required this.categoria});
+
+  get valor => null;
   //métodos(toJson e FromJSON)
   Map<String, dynamic> toJson() => {
     'nome': nome,

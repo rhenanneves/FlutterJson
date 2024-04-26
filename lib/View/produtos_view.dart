@@ -1,15 +1,24 @@
 import 'package:exemplo_json/Controller/produto_controller.dart';
+import 'package:exemplo_json/Model/produtos_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomepageState extends State<Homepage> {
-  late ProdutoController _produtoController;
+class _HomePageState extends State<HomePage> {
+  ProdutoController _controller = ProdutoController();
+
+  @override
+  void initState() {
+    _controller.loadProdutos();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,18 +28,27 @@ class _HomepageState extends State<Homepage> {
       body: Column(
         children: [
           Expanded(
-              child: ListView.builder(
-                itemCount: _produtoController.produtos.length,
-                itemBuilder: (context, index) {
-                  final produto = _produtoController.produtos[index];
-                  return ListTile(
-                    title: Text(produto.nome),
-                    subtitle: Text('Preço: ${produto.preco.toStringAsFixed(2)} - Categoria: ${produto.categoria}'),
-                  );
-                },
-              ),
-            ),
-
+              child: FutureBuilder<List<Produto>>(
+                  future:  _controller.loadProdutos(),
+                  builder: (context, snapshot) {
+                    if (_controller.produtos.isNotEmpty) {
+                      return ListView.builder(
+                        itemCount: _controller.produtos.length,
+                        itemBuilder: (context, index) {
+                          final produto = _controller.produtos[index];
+                          return ListTile(
+                            title: Text(produto.nome),
+                            subtitle: Text(
+                                'Preço: ${produto.valor.toStringAsFixed(2)} - Categoria: ${produto.categoria}'),
+                          );
+                        },
+                      );
+                    }else{
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  })),
         ],
       ),
     );

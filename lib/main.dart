@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Exemplo Json",
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: Homepage(),
+      home: HomePage(),
     );
   }
 }
